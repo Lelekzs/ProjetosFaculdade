@@ -6,4 +6,5 @@ import com.hardsoft.sistema.entities.TipoServicoEntity;
 
 @Repository
 public interface TipoServicoRepository extends JpaRepository<TipoServicoEntity, Long> {
+    
 }

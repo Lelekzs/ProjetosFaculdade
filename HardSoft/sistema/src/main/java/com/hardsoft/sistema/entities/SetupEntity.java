@@ -17,7 +17,9 @@ public class SetupEntity {
     @Column(length = 50)
     private String device; // Ex: Notebook, Desktop, Servidor
 
+    @Column
     private String processador;
+    
     private String memoriaRam;
     private String placaMae;
     private String fonte;

@@ -22,7 +22,7 @@ public class PecaEntity {
 
     @Column(length = 20)
     private String condicao; // Novo ou Usado
-
+    
     private double precoVenda;
 
     private int qtdEstoque;

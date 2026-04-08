@@ -23,6 +23,7 @@ public class OrdemServicoEntity {
     @Column(columnDefinition = "TEXT")
     private String defeito;
 
+    @Column()
     private double valorTotal;
 
     @ManyToOne

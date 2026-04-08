@@ -6,5 +6,5 @@ import com.hardsoft.sistema.entities.ClienteEntity;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<ClienteEntity, Long> {
-    // Aqui o Spring Boot já cria o CRUD básico automaticamente!
+   
 }
