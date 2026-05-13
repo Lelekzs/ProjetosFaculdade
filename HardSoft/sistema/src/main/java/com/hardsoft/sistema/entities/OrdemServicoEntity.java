@@ -18,7 +18,7 @@ public class OrdemServicoEntity {
     private LocalDateTime dataEntrada;
 
     @Column(length = 30)
-    private String status; // Ex: Aberta, Em Analise, Finalizada
+    private String status; 
 
     @Column(columnDefinition = "TEXT")
     private String defeito;
@@ -31,6 +31,14 @@ public class OrdemServicoEntity {
     private ClienteEntity cliente;
 
     @ManyToOne
-    @JoinColumn(name = "id_usuario") // O técnico que abriu a OS
+    @JoinColumn(name = "id_usuario") 
     private UsuarioEntity usuario;
+
+    //Trazer setup 
+    @ManyToOne
+    @JoinColumn(name = "id_setup")
+    private SetupEntity setup;
+
+    // Fazer lista de peças e lista de serviços
+    
 }

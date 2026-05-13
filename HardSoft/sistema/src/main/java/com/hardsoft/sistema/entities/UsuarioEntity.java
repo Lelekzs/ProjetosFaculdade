@@ -1,32 +1,20 @@
 package com.hardsoft.sistema.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Table;
-import lombok.AllArgsConstructor;
+import java.sql.Date;
+
+import jakarta.persistence.*;
 import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.EqualsAndHashCode;
 
-@Data
-@NoArgsConstructor
-@AllArgsConstructor
 @Entity
-@Table(name = "tdusarios")
-@Inheritance(strategy = InheritanceType.JOINED)
-public class UsuarioEntity {
-    @Id
-    @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long id;
-    @Column(name = "nome",nullable = false, length = 100)
-    private String nome;
-    @Column(nullable = false, length = 100)
-    private String email;
-    @Column(nullable = false, length = 20)
-    private String senha; 
-
+@Data
+@EqualsAndHashCode(callSuper = true)
+@Table(name = "tb_clientes")
+@PrimaryKeyJoinColumn(name = "id_usuario") 
+public class UsuarioEntity extends ClienteEntity {
+//Inverter a herança de UsuarioEntitiy extends ClienteEntity
+    private String cpf;
+    private String telefone;
+    private String endereco;
+    private Date dataCadastro;
 }
