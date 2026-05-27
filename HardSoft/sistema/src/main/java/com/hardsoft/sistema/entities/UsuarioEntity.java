@@ -9,7 +9,7 @@ import lombok.EqualsAndHashCode;
 @Entity
 @Data
 @EqualsAndHashCode(callSuper = true)
-@Table(name = "tb_clientes")
+@Table(name = "tb_usuarios")
 @PrimaryKeyJoinColumn(name = "id_usuario") 
 public class UsuarioEntity extends ClienteEntity {
 //Inverter a herança de UsuarioEntitiy extends ClienteEntity

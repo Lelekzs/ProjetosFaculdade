@@ -3,6 +3,7 @@ package com.hardsoft.sistema.entities;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "tdordens_servico")
@@ -34,11 +35,16 @@ public class OrdemServicoEntity {
     @JoinColumn(name = "id_usuario") 
     private UsuarioEntity usuario;
 
-    //Trazer setup 
     @ManyToOne
     @JoinColumn(name = "id_setup")
     private SetupEntity setup;
 
     // Fazer lista de peças e lista de serviços
-    
+    @OneToMany(mappedBy = "ordemServico")
+    public List<PecaEntity> pecas;
+
+    @OneToMany(mappedBy = "ordemServico")
+    public List<ServicoEntity> servicos;
+
+    //Criar uma entidade N:N de serviços e peças com atributos vlrVenda, qntVendida e OS
 }

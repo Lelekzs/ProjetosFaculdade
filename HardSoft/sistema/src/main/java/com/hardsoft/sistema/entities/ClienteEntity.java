@@ -16,9 +16,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tdusarios")
+@Table(name = "tb_clientes")
 @Inheritance(strategy = InheritanceType.JOINED)
-public class UsuarioEntity {
+public class ClienteEntity {
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
