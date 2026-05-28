@@ -174,7 +174,5 @@ public class OrdemServicoService {
         }
         os.setValorTotal(total);
         repository.save(os);
-
-        System.out.println("teste");
     }
 }
