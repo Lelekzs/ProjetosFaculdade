@@ -1,0 +1,397 @@
+{
+  "info": {
+    "name": "HardSoft API",
+    "description": "Sistema de Ordem de Servico - HardSoft. Execute as requisicoes na ordem em que aparecem (1 a 8): os IDs criados sao salvos automaticamente em variaveis da collection e reutilizados nas requisicoes seguintes.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" },
+    { "key": "adminId", "value": "" },
+    { "key": "clienteId", "value": "" },
+    { "key": "setupId", "value": "" },
+    { "key": "tipoServicoId", "value": "" },
+    { "key": "pecaId", "value": "" },
+    { "key": "osId", "value": "" },
+    { "key": "servicoId", "value": "" },
+    { "key": "pecaServicoId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "1. Admin",
+      "item": [
+        {
+          "name": "Criar Admin",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status 201', () => pm.response.code === 201);",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('adminId', body.id);",
+                  "console.log('adminId =', body.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/admins", "host": ["{{baseUrl}}"], "path": ["api", "admins"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Matheus Tecnico\",\n  \"email\": \"matheus@hardsoft.com\",\n  \"senha\": \"senha123\",\n  \"telefone\": \"17999990000\",\n  \"endereco\": \"Rua da Oficina, 50\",\n  \"cargo\": \"Tecnico\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Admins",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/admins", "host": ["{{baseUrl}}"], "path": ["api", "admins"] }
+          }
+        },
+        {
+          "name": "Buscar Admin por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/admins/{{adminId}}", "host": ["{{baseUrl}}"], "path": ["api", "admins", "{{adminId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. Cliente",
+      "item": [
+        {
+          "name": "Criar Cliente",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status 201', () => pm.response.code === 201);",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('clienteId', body.id);",
+                  "console.log('clienteId =', body.id);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/clientes", "host": ["{{baseUrl}}"], "path": ["api", "clientes"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Joao Silva\",\n  \"email\": \"joao@email.com\",\n  \"senha\": \"senha123\",\n  \"cpfCnpj\": \"12345678901\",\n  \"rg\": \"MG1234567\",\n  \"telefone\": \"17988887777\",\n  \"endereco\": \"Rua A, 100\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Clientes",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/clientes", "host": ["{{baseUrl}}"], "path": ["api", "clientes"] }
+          }
+        },
+        {
+          "name": "Buscar Cliente por ID",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/clientes/{{clienteId}}", "host": ["{{baseUrl}}"], "path": ["api", "clientes", "{{clienteId}}"] }
+          }
+        },
+        {
+          "name": "Atualizar Cliente",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/clientes/{{clienteId}}", "host": ["{{baseUrl}}"], "path": ["api", "clientes", "{{clienteId}}"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Joao Silva Souza\",\n  \"email\": \"joao@email.com\",\n  \"senha\": \"senha123\",\n  \"cpfCnpj\": \"12345678901\",\n  \"rg\": \"MG1234567\",\n  \"telefone\": \"17988887777\",\n  \"endereco\": \"Rua B, 200\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Setup",
+      "item": [
+        {
+          "name": "Criar Setup",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status 201', () => pm.response.code === 201);",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('setupId', body.idSetup);",
+                  "console.log('setupId =', body.idSetup);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/setups", "host": ["{{baseUrl}}"], "path": ["api", "setups"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCliente\": {{clienteId}},\n  \"marca\": \"Dell\",\n  \"modelo\": \"Inspiron 15\",\n  \"processador\": \"Intel i5-1135G7\",\n  \"memoria\": \"16GB DDR4\",\n  \"placaDeVideo\": \"Intel Iris Xe\",\n  \"armazenamento\": \"SSD 512GB\"\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Setups do Cliente",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/setups/cliente/{{clienteId}}", "host": ["{{baseUrl}}"], "path": ["api", "setups", "cliente", "{{clienteId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Tipo de Servico",
+      "item": [
+        {
+          "name": "Criar TipoServico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status 201', () => pm.response.code === 201);",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('tipoServicoId', body.idTipoServico);",
+                  "console.log('tipoServicoId =', body.idTipoServico);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/tipos-servico", "host": ["{{baseUrl}}"], "path": ["api", "tipos-servico"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Formatacao\",\n  \"descricao\": \"Formatacao completa com instalacao de SO\",\n  \"valorBase\": 120.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar TiposServico",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/tipos-servico", "host": ["{{baseUrl}}"], "path": ["api", "tipos-servico"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Peca",
+      "item": [
+        {
+          "name": "Criar Peca",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status 201', () => pm.response.code === 201);",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('pecaId', body.idPeca);",
+                  "console.log('pecaId =', body.idPeca);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/pecas", "host": ["{{baseUrl}}"], "path": ["api", "pecas"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nome\": \"Memoria RAM 8GB DDR4\",\n  \"descricao\": \"Modulo 8GB 2666MHz\",\n  \"marca\": \"Kingston\",\n  \"condicao\": \"Novo\",\n  \"precoCusto\": 90.00,\n  \"precoVenda\": 150.00,\n  \"qntEstoque\": 10\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Pecas",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/pecas", "host": ["{{baseUrl}}"], "path": ["api", "pecas"] }
+          }
+        },
+        {
+          "name": "Buscar Pecas por nome",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/pecas?nome=memoria", "host": ["{{baseUrl}}"], "path": ["api", "pecas"], "query": [{ "key": "nome", "value": "memoria" }] }
+          }
+        },
+        {
+          "name": "Pecas com estoque baixo",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/pecas/estoque-baixo?limite=5", "host": ["{{baseUrl}}"], "path": ["api", "pecas", "estoque-baixo"], "query": [{ "key": "limite", "value": "5" }] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Ordem de Servico",
+      "item": [
+        {
+          "name": "Criar OS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status 201', () => pm.response.code === 201);",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('osId', body.idOrdemServico);",
+                  "console.log('osId =', body.idOrdemServico);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/ordens-servico", "host": ["{{baseUrl}}"], "path": ["api", "ordens-servico"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idCliente\": {{clienteId}},\n  \"idSetup\": {{setupId}},\n  \"idAdmin\": {{adminId}},\n  \"defeito\": \"Computador muito lento e travando\",\n  \"solucao\": null\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar OS",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/ordens-servico", "host": ["{{baseUrl}}"], "path": ["api", "ordens-servico"] }
+          }
+        },
+        {
+          "name": "Listar OS por status",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/ordens-servico?status=ABERTA", "host": ["{{baseUrl}}"], "path": ["api", "ordens-servico"], "query": [{ "key": "status", "value": "ABERTA" }] }
+          }
+        },
+        {
+          "name": "Historico de OS do Cliente",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/ordens-servico/cliente/{{clienteId}}", "host": ["{{baseUrl}}"], "path": ["api", "ordens-servico", "cliente", "{{clienteId}}"] }
+          }
+        },
+        {
+          "name": "Buscar OS por ID (ver valorTotal)",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/ordens-servico/{{osId}}", "host": ["{{baseUrl}}"], "path": ["api", "ordens-servico", "{{osId}}"] }
+          }
+        },
+        {
+          "name": "Atualizar Status da OS",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/ordens-servico/{{osId}}/status", "host": ["{{baseUrl}}"], "path": ["api", "ordens-servico", "{{osId}}", "status"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"CONCLUIDA\"\n}"
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Servico (dentro da OS)",
+      "item": [
+        {
+          "name": "Adicionar Servico a OS",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status 201', () => pm.response.code === 201);",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('servicoId', body.idServico);",
+                  "console.log('servicoId =', body.idServico);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/servicos", "host": ["{{baseUrl}}"], "path": ["api", "servicos"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idOrdemServico\": {{osId}},\n  \"idTipoServico\": {{tipoServicoId}},\n  \"descricaoServico\": \"Formatacao + instalacao Windows 11 e drivers\",\n  \"precoMaoDeObra\": 120.00\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Servicos da OS",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/servicos/ordem-servico/{{osId}}", "host": ["{{baseUrl}}"], "path": ["api", "servicos", "ordem-servico", "{{osId}}"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "8. Peca no Servico",
+      "item": [
+        {
+          "name": "Adicionar Peca ao Servico",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test('status 201', () => pm.response.code === 201);",
+                  "const body = pm.response.json();",
+                  "pm.collectionVariables.set('pecaServicoId', body.idPecaServico);",
+                  "console.log('pecaServicoId =', body.idPecaServico);",
+                  "console.log('subtotal =', body.subtotal);"
+                ]
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": { "raw": "{{baseUrl}}/api/pecas-servico", "host": ["{{baseUrl}}"], "path": ["api", "pecas-servico"] },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"idServico\": {{servicoId}},\n  \"idPeca\": {{pecaId}},\n  \"qntVendida\": 2\n}"
+            }
+          }
+        },
+        {
+          "name": "Listar Pecas do Servico",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/pecas-servico/servico/{{servicoId}}", "host": ["{{baseUrl}}"], "path": ["api", "pecas-servico", "servico", "{{servicoId}}"] }
+          }
+        },
+        {
+          "name": "Conferir valorTotal final da OS",
+          "request": {
+            "method": "GET",
+            "url": { "raw": "{{baseUrl}}/api/ordens-servico/{{osId}}", "host": ["{{baseUrl}}"], "path": ["api", "ordens-servico", "{{osId}}"] }
+          }
+        }
+      ]
+    }
+  ]
+}
