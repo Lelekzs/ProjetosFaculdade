@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>HardSoft - Admins</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo"><h1>HardSoft</h1><p>Gestao de OS</p></div>
+            <ul class="sidebar-nav">
+                <li><a href="../index.html"><span class="nav-icon">📊</span> Dashboard</a></li>
+                <li><a href="ordens-servico.html"><span class="nav-icon">📋</span> Ordens de Servico</a></li>
+                <li><a href="clientes.html"><span class="nav-icon">👥</span> Clientes</a></li>
+                <li><a href="admins.html" class="active"><span class="nav-icon">👤</span> Admins</a></li>
+                <li><a href="setups.html"><span class="nav-icon">💻</span> Setups</a></li>
+                <li><a href="pecas.html"><span class="nav-icon">🔧</span> Pecas</a></li>
+                <li><a href="tipos-servico.html"><span class="nav-icon">⚙️</span> Tipos de Servico</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div><h2>Administradores</h2><p>Tecnicos e operadores do sistema</p></div>
+                <button class="btn btn-primary" onclick="novoAdmin()">+ Novo Admin</button>
+            </div>
+            <div class="card">
+                <div id="lista"><div class="loader-container"><div class="loader"></div></div></div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="modal-admin">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-titulo">Novo Admin</h3>
+                <button class="modal-close" onclick="closeModal('modal-admin')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form-admin">
+                    <input type="hidden" name="id">
+                    <div class="form-group">
+                        <label>Nome <span class="required">*</span></label>
+                        <input type="text" name="nome" maxlength="100" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Email <span class="required">*</span></label>
+                            <input type="email" name="email" maxlength="100" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Senha <span class="required">*</span></label>
+                            <input type="password" name="senha" minlength="6" maxlength="60" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Cargo</label>
+                            <select name="cargo">
+                                <option value="">Selecione...</option>
+                                <option>Tecnico</option>
+                                <option>Gerente</option>
+                                <option>Atendente</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Telefone</label>
+                            <input type="text" name="telefone" maxlength="20">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Endereco</label>
+                        <input type="text" name="endereco" maxlength="200">
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('modal-admin')">Cancelar</button>
+                        <button type="submit" class="btn btn-primary">Salvar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script>
+    async function carregar() {
+        try {
+            const admins = await adminAPI.listar();
+            if (admins.length === 0) {
+                $('#lista').innerHTML = `<div class="empty-state"><div class="empty-state-icon">👤</div><p>Nenhum admin cadastrado</p></div>`;
+                return;
+            }
+            $('#lista').innerHTML = `
+                <div class="table-wrapper"><table>
+                    <thead><tr><th>ID</th><th>Nome</th><th>Email</th><th>Cargo</th><th>Telefone</th><th>Acoes</th></tr></thead>
+                    <tbody>
+                        ${admins.map(a => `
+                            <tr>
+                                <td>#${a.id}</td>
+                                <td>${a.nome}</td>
+                                <td>${a.email}</td>
+                                <td>${a.cargo || '-'}</td>
+                                <td>${a.telefone || '-'}</td>
+                                <td class="table-actions">
+                                    <button class="btn btn-sm btn-secondary" onclick="editar(${a.id})">Editar</button>
+                                    <button class="btn btn-sm btn-danger" onclick="deletar(${a.id})">Excluir</button>
+                                </td>
+                            </tr>`).join('')}
+                    </tbody>
+                </table></div>`;
+        } catch (err) { toast(err.message, 'error'); }
+    }
+    function novoAdmin() {
+        $('#modal-titulo').textContent = 'Novo Admin';
+        $('#form-admin').reset();
+        openModal('modal-admin');
+    }
+    async function editar(id) {
+        try {
+            const a = await adminAPI.buscar(id);
+            const f = $('#form-admin');
+            f.id.value = a.id; f.nome.value = a.nome; f.email.value = a.email;
+            f.senha.value = ''; f.cargo.value = a.cargo || '';
+            f.telefone.value = a.telefone || ''; f.endereco.value = a.endereco || '';
+            $('#modal-titulo').textContent = `Editar Admin #${id}`;
+            openModal('modal-admin');
+        } catch (err) { toast(err.message, 'error'); }
+    }
+    async function deletar(id) {
+        if (!confirmar(`Excluir admin #${id}?`)) return;
+        try { await adminAPI.deletar(id); toast('Admin excluido'); carregar(); }
+        catch (err) { toast(err.message, 'error'); }
+    }
+    $('#form-admin').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const data = coletarForm(e.target);
+        const id = data.id; delete data.id;
+        try {
+            if (id) { await adminAPI.atualizar(id, data); toast('Admin atualizado'); }
+            else    { await adminAPI.criar(data); toast('Admin criado'); }
+            closeModal('modal-admin'); carregar();
+        } catch (err) { toast(err.message, 'error'); }
+    });
+    carregar();
+    </script>
+</body>
+</html>

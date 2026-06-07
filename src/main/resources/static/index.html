@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>HardSoft - Dashboard</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-logo">
+                <h1>HardSoft</h1>
+                <p>Gestao de OS</p>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="index.html" class="active"><span class="nav-icon">📊</span> Dashboard</a></li>
+                <li><a href="pages/ordens-servico.html"><span class="nav-icon">📋</span> Ordens de Servico</a></li>
+                <li><a href="pages/clientes.html"><span class="nav-icon">👥</span> Clientes</a></li>
+                <li><a href="pages/admins.html"><span class="nav-icon">👤</span> Admins</a></li>
+                <li><a href="pages/setups.html"><span class="nav-icon">💻</span> Setups</a></li>
+                <li><a href="pages/pecas.html"><span class="nav-icon">🔧</span> Pecas</a></li>
+                <li><a href="pages/tipos-servico.html"><span class="nav-icon">⚙️</span> Tipos de Servico</a></li>
+            </ul>
+        </aside>
+
+        <main class="main-content">
+            <div class="page-header">
+                <div>
+                    <h2>Dashboard</h2>
+                    <p>Visao geral do sistema</p>
+                </div>
+                <a href="pages/ordens-servico.html" class="btn btn-primary">+ Nova OS</a>
+            </div>
+
+            <div class="stats-grid" id="stats-grid">
+                <div class="loader-container"><div class="loader"></div></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Ordens de Servico em Andamento</h3>
+                    <a href="pages/ordens-servico.html" class="btn btn-sm btn-secondary">Ver todas</a>
+                </div>
+                <div id="os-recentes">
+                    <div class="loader-container"><div class="loader"></div></div>
+                </div>
+            </div>
+
+            <div style="height: 20px;"></div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h3>Pecas com Estoque Baixo</h3>
+                    <a href="pages/pecas.html" class="btn btn-sm btn-secondary">Gerenciar pecas</a>
+                </div>
+                <div id="estoque-baixo">
+                    <div class="loader-container"><div class="loader"></div></div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script>
+    async function carregarDashboard() {
+        try {
+            const [oss, clientes, pecas, estoqueBaixo] = await Promise.all([
+                osAPI.listar(),
+                clienteAPI.listar(),
+                pecaAPI.listar(),
+                pecaAPI.estoqueBaixo(5)
+            ]);
+
+            const osAbertas = oss.filter(o => ['ABERTA', 'EM_ANDAMENTO', 'AGUARDANDO_PECA'].includes(o.status));
+            const osConcluidas = oss.filter(o => ['CONCLUIDA', 'ENTREGUE'].includes(o.status));
+            const faturamento = osConcluidas.reduce((s, o) => s + Number(o.valorTotal || 0), 0);
+
+            $('#stats-grid').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-icon">📋</div>
+                    <div class="stat-label">OSs em Aberto</div>
+                    <div class="stat-value">${osAbertas.length}</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-label">OSs Concluidas</div>
+                    <div class="stat-value">${osConcluidas.length}</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-label">Clientes</div>
+                    <div class="stat-value">${clientes.length}</div>
+                </div>
+                <div class="stat-card warning">
+                    <div class="stat-icon">🔧</div>
+                    <div class="stat-label">Pecas Cadastradas</div>
+                    <div class="stat-value">${pecas.length}</div>
+                </div>
+                <div class="stat-card success">
+                    <div class="stat-icon">💰</div>
+                    <div class="stat-label">Faturamento (OSs finalizadas)</div>
+                    <div class="stat-value">${formatarMoeda(faturamento)}</div>
+                </div>
+                <div class="stat-card danger">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-label">Pecas em Estoque Baixo</div>
+                    <div class="stat-value">${estoqueBaixo.length}</div>
+                </div>
+            `;
+
+            if (osAbertas.length === 0) {
+                $('#os-recentes').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📭</div>
+                        <p>Nenhuma OS em andamento no momento</p>
+                    </div>`;
+            } else {
+                $('#os-recentes').innerHTML = `
+                    <div class="table-wrapper">
+                    <table>
+                        <thead><tr>
+                            <th>OS</th><th>Cliente</th><th>Equipamento</th>
+                            <th>Status</th><th>Valor</th><th></th>
+                        </tr></thead>
+                        <tbody>
+                            ${osAbertas.slice(0, 10).map(o => `
+                                <tr>
+                                    <td>#${o.idOrdemServico}</td>
+                                    <td>${o.nomeCliente}</td>
+                                    <td>${o.descricaoSetup || '-'}</td>
+                                    <td>${badgeStatus(o.status)}</td>
+                                    <td>${formatarMoeda(o.valorTotal)}</td>
+                                    <td><a href="pages/os-detalhe.html?id=${o.idOrdemServico}" class="btn btn-sm btn-primary">Abrir</a></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    </div>
+                `;
+            }
+
+            if (estoqueBaixo.length === 0) {
+                $('#estoque-baixo').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">✅</div>
+                        <p>Estoque saudavel — nenhuma peca com estoque critico</p>
+                    </div>`;
+            } else {
+                $('#estoque-baixo').innerHTML = `
+                    <div class="table-wrapper">
+                    <table>
+                        <thead><tr>
+                            <th>Peca</th><th>Marca</th>
+                            <th>Estoque</th><th>Preco</th>
+                        </tr></thead>
+                        <tbody>
+                            ${estoqueBaixo.map(p => `
+                                <tr>
+                                    <td>${p.nome}</td>
+                                    <td>${p.marca || '-'}</td>
+                                    <td><strong style="color: var(--danger);">${p.qntEstoque}</strong> em estoque</td>
+                                    <td>${formatarMoeda(p.precoVenda)}</td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    </div>
+                `;
+            }
+        } catch (err) {
+            $('#stats-grid').innerHTML = `<div class="card" style="color:var(--danger);">${err.message}</div>`;
+            toast(err.message, 'error');
+        }
+    }
+
+    carregarDashboard();
+    </script>
+</body>
+</html>
