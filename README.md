@@ -1,40 +1,79 @@
-# HardSoft — Sistema Completo
+# HardSoft — Sistema de Ordem de Serviço
 
-Sistema de gerenciamento de ordens de serviço para assistência técnica de computadores.
-**Backend + Frontend integrados num único projeto.**
+Sistema de gerenciamento de ordens de serviço para a assistência técnica **Leandro Técnico de Informática** (manutenção de computadores e notebooks).
+**Backend + Frontend integrados num único projeto Spring Boot.**
+
+Projeto acadêmico — FATEC São José do Rio Preto.
+Grupo **HardSoft**: Leandro Belati, Matheus Vilela e Davi Vieira.
 
 ## Stack
 
 **Backend**
 - Java 17
 - Spring Boot 3.5.11
-- Spring Data JPA + Validation + Actuator
-- H2 (desenvolvimento) / SQL Server (produção)
+- Spring Data JPA + Validation
+- SQL Server (banco principal) / H2 (alternativa em memória para testes)
 - Lombok
 - Maven
 
 **Frontend** (servido pelo próprio Spring Boot)
 - HTML5 + CSS3 + JavaScript puro
-- Tema escuro moderno
-- Responsivo
+- Tema escuro
+- Autenticação por sessão (login de administrador)
+
+## Funcionalidades
+
+- **Login de administrador** — só administradores cadastrados acessam o sistema.
+- **CRUD completo** de administradores, clientes, equipamentos (setups), peças e tipos de serviço.
+- **Cadastro de cliente** com vários e-mails e telefones (um de cada marcado como principal).
+- **Ordens de Serviço** vinculando cliente, equipamento e administrador, com:
+  - serviços executados e peças utilizadas (baixa automática de estoque),
+  - cálculo automático do valor total,
+  - controle de status (ABERTA, EM_ANDAMENTO, AGUARDANDO_PECA, CONCLUIDA, ENTREGUE, CANCELADA).
+- **Soft delete de clientes** — ao "excluir", o cliente é marcado como INATIVO (preserva o histórico), inclusive por um trigger no banco.
+- **Recursos de banco** (SQL Server): procedures, triggers, views e functions chamados pela aplicação.
 
 ## Como rodar
 
+### 1. Pré-requisitos
+- Java 17+
+- SQL Server (ex.: SQL Server Express) com um banco chamado `HardSoftDB` criado:
+  ```sql
+  CREATE DATABASE HardSoftDB;
+  ```
+
+### 2. Configurar a conexão
+Edite `src/main/resources/application.properties` com os dados do seu SQL Server (servidor, usuário e senha). A aplicação usa `ddl-auto=update`, então ela cria as tabelas automaticamente na primeira execução.
+
+### 3. Subir a aplicação
 ```bash
-./mvnw spring-boot:run        # Linux/Mac
 mvnw.cmd spring-boot:run      # Windows
+./mvnw spring-boot:run        # Linux/Mac
 ```
 
-Depois abra no navegador:
+### 4. Acessar
 ```
 http://localhost:8080
 ```
+A aplicação abre na **tela de login**. Use um administrador cadastrado (veja abaixo).
 
-Pronto. Uma URL só pra tudo: frontend + API.
+### 5. (Opcional) Rodar os scripts de banco
+Depois que a aplicação subir uma vez (criando as tabelas), rode no SQL Server Management Studio, nesta ordem:
+```
+01_HardSoft_Procedures.sql
+02_HardSoft_Triggers.sql
+03_HardSoft_Functions.sql
+04_HardSoft_Views.sql
+05_HardSoft_DadosTeste.sql
+```
+O script `01` já cadastra 2 administradores para teste:
+- `matheus@hardsoft.com` / senha `senha123`
+- `ana@hardsoft.com` / senha `senha456`
 
-- Frontend: `http://localhost:8080/` (dashboard)
-- API REST: `http://localhost:8080/api/*`
-- Console H2: `http://localhost:8080/h2-console` (JDBC URL: `jdbc:h2:mem:hardsoftdb`, user `sa`, sem senha)
+> Se não usar os scripts, crie o primeiro admin pela API:
+> ```bash
+> curl -X POST http://localhost:8080/api/admins -H "Content-Type: application/json" -d "{\"nome\":\"Admin\",\"email\":\"admin@hardsoft.com\",\"senha\":\"123456\",\"cargo\":\"Gerente\"}"
+> ```
 
 ## Estrutura do projeto
 
@@ -45,23 +84,24 @@ sistema/
 └── src/main/
     ├── java/com/hardsoft/sistema/
     │   ├── SistemaApplication.java
-    │   ├── controllers/      ← 8 controllers REST
-    │   ├── services/         ← 8 services com regras de negócio
-    │   ├── repositories/     ← 9 repositories JPA
-    │   ├── entities/         ← 9 entities (com herança JOINED)
-    │   ├── dtos/             ← 14 DTOs (request/response)
-    │   └── exceptions/       ← GlobalExceptionHandler + 2 exceptions
+    │   ├── controllers/      ← controllers REST (inclui AuthController)
+    │   ├── services/         ← regras de negócio (inclui AuthService)
+    │   ├── repositories/     ← repositories JPA
+    │   ├── entities/         ← entities (herança JOINED em UsuarioEntity)
+    │   ├── dtos/             ← DTOs (inclui Login request/response)
+    │   └── exceptions/       ← GlobalExceptionHandler + exceptions
     └── resources/
         ├── application.properties
         └── static/                       ← FRONTEND
-            ├── index.html                  ← Dashboard (página raiz)
+            ├── login.html                 ← Tela de login
+            ├── index.html                 ← Dashboard
             ├── css/style.css
             ├── js/
-            │   ├── api.js                  ← Cliente da API
-            │   └── ui.js                   ← Helpers (toast, modal, formatação)
+            │   ├── api.js                 ← Cliente da API + sessão
+            │   └── ui.js                  ← Helpers + proteção de páginas
             └── pages/
                 ├── ordens-servico.html
-                ├── os-detalhe.html         ← Tela principal de uso
+                ├── os-detalhe.html        ← Tela principal de uso
                 ├── clientes.html
                 ├── admins.html
                 ├── setups.html
@@ -69,91 +109,41 @@ sistema/
                 └── tipos-servico.html
 ```
 
-## Fluxo de uso
-
-Recomendo testar nessa ordem:
-
-1. **Admin** → cadastre um técnico (sem admin, não dá pra abrir OS)
-2. **Cliente** → cadastre um cliente
-3. **Setup** → cadastre o equipamento do cliente
-4. **Tipo de Serviço** → cadastre tipos (Formatação, Limpeza, etc.)
-5. **Peça** → cadastre o estoque inicial
-6. **Nova OS** → abra uma OS vinculando cliente + setup + admin
-7. Na tela de detalhe da OS:
-   - Adicione serviços
-   - Adicione peças aos serviços (estoque baixa automaticamente)
-   - Veja o valor total recalculado
-   - Mude o status (CONCLUÍDA/ENTREGUE preenche data de saída sozinho)
-
 ## Modelo de domínio
 
 ```
 UsuarioEntity (abstrata, raiz)
-├── AdminEntity      → operador do sistema (cargo, OSs sob responsabilidade)
-└── ClienteEntity    → quem traz o PC (cpfCnpj, rg, setups, OSs)
+├── AdminEntity      → operador do sistema; loga (cargo)
+└── ClienteEntity    → quem traz o PC (cpfCnpj, rg, statusCliente, emails, telefones, setups)
 
-SetupEntity          → configuração de um PC do cliente (1 cliente → N setups)
+SetupEntity          → equipamento de um cliente (1 cliente → N setups)
 PecaEntity           → peça em estoque
-TipoServicoEntity    → catálogo (Formatação, Limpeza, etc)
+TipoServicoEntity    → catálogo de serviços (Formatação, Limpeza, etc.)
 
 OrdemServicoEntity   → entidade central; liga Cliente + Setup + Admin
 └── ServicoEntity    → execução de um TipoServico dentro da OS
     └── PecaServicoEntity → peça(s) usada(s) naquele serviço
 ```
 
-### Decisões de modelagem
-
-- **CPF/CNPJ e RG** ficaram em `ClienteEntity` (só faz sentido pra cliente, não pra admin).
-- **`UsuarioEntity` é abstrata**: tem só os campos comuns (nome, email, senha, telefone, endereço, dataCadastro). Admin e Cliente herdam (estratégia `JOINED` — 3 tabelas no banco).
-- **`PecaOSEntity` foi removida**: era duplicada com `PecaServicoEntity`.
-- **`solucao`** foi adicionado em OS.
-- **`BigDecimal`** em todos os campos monetários.
-
 ## Endpoints da API
 
-Mantidos em `/api/*`. Resumo:
+- `/api/auth/login` — autenticação do administrador
 - `/api/admins` — CRUD
-- `/api/clientes` — CRUD
-- `/api/setups` — CRUD + filtro por cliente (`/api/setups/cliente/{id}`)
-- `/api/pecas` — CRUD + busca por nome (`?nome=`) + alerta estoque (`/estoque-baixo?limite=`)
+- `/api/clientes` — CRUD + inativos (`/inativos`) + reativar (`PATCH /{id}/reativar`)
+- `/api/setups` — CRUD + filtro por cliente
+- `/api/pecas` — CRUD + busca por nome + alerta de estoque
 - `/api/tipos-servico` — CRUD
-- `/api/ordens-servico` — CRUD + filtro (`?status=`) + histórico (`/cliente/{id}`) + status (`PATCH /{id}/status`)
-- `/api/servicos` — gerenciar serviços de uma OS
-- `/api/pecas-servico` — gerenciar peças usadas em serviços
+- `/api/ordens-servico` — CRUD + filtro por status + histórico por cliente + alterar status
+- `/api/servicos` — serviços de uma OS
+- `/api/pecas-servico` — peças usadas em serviços
 
-## Configuração do banco
+## Autenticação
 
-O `application.properties` está configurado pra H2 (banco em memória) por padrão.
+Versão simples (projeto acadêmico): o login valida e-mail e senha contra a tabela de administradores e guarda a sessão no navegador (`sessionStorage`). Não usa Spring Security nem hash de senha. Para produção, o recomendado seria Spring Security + BCrypt + JWT.
 
-Pra usar **SQL Server**:
-1. Abra `src/main/resources/application.properties`
-2. Comente as linhas do H2
-3. Descomente as linhas do SQL Server
-4. Ajuste usuário/senha/banco
-5. Reinicie a aplicação
-
-## Build para distribuição
-
-Pra gerar um JAR único com o sistema inteiro embutido:
+## Build
 
 ```bash
 ./mvnw package
+java -jar target/hardsoft-0.0.1-SNAPSHOT.jar
 ```
-
-Resultado: `target/hardsoft-0.0.1-SNAPSHOT.jar`
-
-Pra executar em qualquer máquina (só precisa do Java 17):
-```bash
-java -jar hardsoft-0.0.1-SNAPSHOT.jar
-```
-
-Frontend + backend rodando com um comando.
-
-## Próximos passos sugeridos
-
-1. **Spring Security + BCrypt** — autenticação JWT, hash de senhas
-2. **Tela de login** no frontend
-3. **Status como `enum`** em vez de String livre
-4. **Swagger/OpenAPI** — documentação interativa
-5. **Flyway** — migrations de banco em produção
-6. **Testes** — services com Mockito
