@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<XMI xmi.version="1.2" xmlns:UML="http://schema.omg.org/spec/UML/1.3" verbose="0">
+ <XMI.header>
+  <XMI.documentation>
+   <XMI.exporter>umbrello uml modeller</XMI.exporter>
+   <XMI.exporterVersion>2.32.0</XMI.exporterVersion>
+  </XMI.documentation>
+  <XMI.metamodel xmi.version="1.3" href="UML.xml" xmi.name="UML"/>
+ </XMI.header>
+ <XMI.content>
+  <UML:Model isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="HardSoft" xmi.id="m9a4ce6bb96074">
+   <UML:Namespace.ownedElement>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_usuarios" xmi.id="c77ed892f61424">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id" type="bigint (PK)" xmi.id="a2525c129dcce4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="nome" type="varchar(100)" xmi.id="a5ba7070c7d164"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="email" type="varchar(100)" xmi.id="ad9069eb412a84"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="senha" type="varchar(60)" xmi.id="aa99646cbcbeb4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="telefone" type="varchar(20)" xmi.id="ac2bf54879d614"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="endereco" type="varchar(200)" xmi.id="a0c6f53c55f664"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="data_cadastro" type="date" xmi.id="a87d31f04f42b4"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_admins" xmi.id="c299b78a4f2a24">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id" type="bigint (PK,FK)" xmi.id="aeae0406b46274"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="cargo" type="varchar(50)" xmi.id="aaaeb1b3abe4b4"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_clientes" xmi.id="c783c5878cde34">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id" type="bigint (PK,FK)" xmi.id="a932de7bd154b4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="cpf_cnpj" type="varchar(14)" xmi.id="ab9daff23c4d04"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="rg" type="varchar(20)" xmi.id="abaeef6a279194"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="status_cliente" type="varchar(10)" xmi.id="af741d4a4defd4"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_cliente_emails" xmi.id="ce3d8261239274">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_email" type="bigint (PK)" xmi.id="a0678a7a1b2294"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="email" type="varchar(100)" xmi.id="a4753237d59734"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="principal" type="bit" xmi.id="a6bb97402b2424"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_cliente" type="bigint (FK)" xmi.id="ae5ea85baff9c4"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_cliente_telefones" xmi.id="cff61d3f37ae44">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_telefone" type="bigint (PK)" xmi.id="a60dfd36c54844"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="telefone" type="varchar(20)" xmi.id="ad7626169aafe4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="tipo" type="varchar(20)" xmi.id="a8a4f6bb2862c4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="principal" type="bit" xmi.id="a229ec0fc16964"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_cliente" type="bigint (FK)" xmi.id="a5e8392d213814"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_setups" xmi.id="c78b6006763c34">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_setup" type="bigint (PK)" xmi.id="a30d75536f2734"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="marca" type="varchar(50)" xmi.id="a5dfc8e55f84c4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="modelo" type="varchar(50)" xmi.id="ac135bd31f1154"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="processador" type="varchar(100)" xmi.id="a93485aa513f54"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="memoria" type="varchar(50)" xmi.id="aa285c0abc5464"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="placa_de_video" type="varchar(100)" xmi.id="a53235110810d4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="armazenamento" type="varchar(100)" xmi.id="a79ce40a281014"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_cliente" type="bigint (FK)" xmi.id="ab8bb77d48fbb4"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_pecas" xmi.id="cf6e296ae59c54">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_peca" type="bigint (PK)" xmi.id="a59831c427d414"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="nome" type="varchar(100)" xmi.id="a86ac7f6742344"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="descricao" type="varchar(200)" xmi.id="a428af61b02d34"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="marca" type="varchar(50)" xmi.id="a430983949a1c4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="condicao" type="varchar(20)" xmi.id="ab225b2a2c31a4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="preco_custo" type="decimal(10,2)" xmi.id="a8bc0b3a7f7134"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="preco_venda" type="decimal(10,2)" xmi.id="a00c31d51162d4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="qnt_estoque" type="int" xmi.id="afd7ff11d00b24"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_tipos_servico" xmi.id="c22527924c4024">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_tipo_servico" type="bigint (PK)" xmi.id="ac7f74d545d574"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="nome" type="varchar(100)" xmi.id="af2d538da78464"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="descricao" type="varchar(255)" xmi.id="a68700ea2dd584"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="valor_base" type="decimal(10,2)" xmi.id="a0178a8987f584"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_ordens_servico" xmi.id="c0e668e7285604">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_ordem_servico" type="bigint (PK)" xmi.id="afa86eb62086b4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="data_entrada" type="datetime" xmi.id="a428fe504c2554"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="data_saida" type="datetime" xmi.id="a90439b531c714"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="status" type="varchar(30)" xmi.id="adf8b61db81c24"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="defeito" type="text" xmi.id="a2204e9050bbc4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="solucao" type="text" xmi.id="ac26020d06d2a4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="valor_total" type="decimal(10,2)" xmi.id="a9876582ff5014"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_cliente" type="bigint (FK)" xmi.id="a8d729a29dd114"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_setup" type="bigint (FK)" xmi.id="a9d417f36d93f4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_admin" type="bigint (FK)" xmi.id="ad3684baeea404"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_servicos_executados" xmi.id="c0d64012f02c54">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_servico" type="bigint (PK)" xmi.id="ad64ea1d066fa4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="descricao_servico" type="varchar(500)" xmi.id="ae69efe56538d4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="preco_mao_de_obra" type="decimal(10,2)" xmi.id="a38c55d7ccb944"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_ordem_servico" type="bigint (FK)" xmi.id="ade82c6cccc9d4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_tipo_servico" type="bigint (FK)" xmi.id="a9a296ceb4d9f4"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Class isSpecification="false" isLeaf="false" isRoot="false" isAbstract="false" name="tb_pecas_servicos" xmi.id="c961904e2ead64">
+     <UML:Classifier.feature>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_peca_servico" type="bigint (PK)" xmi.id="adde46453bd344"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="qnt_vendida" type="int" xmi.id="ad32df99e17494"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="vlr_unitario_venda" type="decimal(10,2)" xmi.id="a16424944ac094"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_servico" type="bigint (FK)" xmi.id="aeaf353da2f6a4"/>
+      <UML:Attribute isSpecification="false" visibility="public" name="id_peca" type="bigint (FK)" xmi.id="a32585749afe14"/>
+     </UML:Classifier.feature>
+    </UML:Class>
+    <UML:Association isSpecification="false" name="" xmi.id="s57aff13c46674">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="c299b78a4f2a24" xmi.id="eb0571bbb05a74"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c77ed892f61424" xmi.id="ec9f280a225dd4"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="se7e7f5c75cc74">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="c783c5878cde34" xmi.id="e35e3083c1b484"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c77ed892f61424" xmi.id="e3816c38548f14"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="sb948580e75144">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="ce3d8261239274" xmi.id="e4b190e56e2124"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c783c5878cde34" xmi.id="e448559e0e3814"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="s9b40b863856d4">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="cff61d3f37ae44" xmi.id="eda5fd074b3934"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c783c5878cde34" xmi.id="eb800a5a396834"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="s97dfb631cb644">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="c78b6006763c34" xmi.id="e1c71598904354"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c783c5878cde34" xmi.id="edf6ba6652c334"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="sf9d75f96d2e04">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="c0e668e7285604" xmi.id="ea05d06756f154"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c783c5878cde34" xmi.id="e1b92393929f64"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="s7ff3a5593cd94">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="c0e668e7285604" xmi.id="e3dd7a62c70764"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c78b6006763c34" xmi.id="e9a85c082e3844"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="s155b62c8c2814">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="c0e668e7285604" xmi.id="e5f4f31fd0e4d4"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c299b78a4f2a24" xmi.id="e88040a24f68f4"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="scfdf2c65501f4">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="c0d64012f02c54" xmi.id="ea55cb76755644"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c0e668e7285604" xmi.id="e139b9daac3094"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="sdb49f5337bad4">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="c0d64012f02c54" xmi.id="e35958920f5a64"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c22527924c4024" xmi.id="e3f415d4326f64"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="s2a1cd9a098bc4">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="c961904e2ead64" xmi.id="edd8fdb0e23874"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="c0d64012f02c54" xmi.id="ea74a89cb56394"/>
+     </UML:Association.connection>
+    </UML:Association>
+    <UML:Association isSpecification="false" name="" xmi.id="se59401623fe24">
+     <UML:Association.connection>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="*" type="c961904e2ead64" xmi.id="eb9e5a27c29e14"/>
+      <UML:AssociationEnd isSpecification="false" visibility="public" aggregation="none" isNavigable="true" name="" multiplicity="1" type="cf6e296ae59c54" xmi.id="e32dea79b471f4"/>
+     </UML:Association.connection>
+    </UML:Association>
+   </UML:Namespace.ownedElement>
+  </UML:Model>
+ </XMI.content>
+</XMI>
